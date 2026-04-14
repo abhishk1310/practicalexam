@@ -1,0 +1,55 @@
+public class DBHelper extends SQLiteOpenHelper {
+
+    public static final String DB_NAME = "UserDB";
+    public static final String TABLE_NAME = "Users";
+
+    public DBHelper(Context context) {
+        super(context, DB_NAME, null, 1);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE Users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT)");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS Users");
+        onCreate(db);
+    }
+
+    // INSERT
+    public boolean insertData(String name, String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("name", name);
+        cv.put("email", email);
+
+        long result = db.insert(TABLE_NAME, null, cv);
+        return result != -1;
+    }
+
+    // READ
+    public Cursor getAllData() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM Users", null);
+    }
+
+    // UPDATE
+    public boolean updateData(String id, String name, String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("name", name);
+        cv.put("email", email);
+
+        int result = db.update(TABLE_NAME, cv, "id=?", new String[]{id});
+        return result > 0;
+    }
+
+    // DELETE
+    public boolean deleteData(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int result = db.delete(TABLE_NAME, "id=?", new String[]{id});
+        return result > 0;
+    }
+}

@@ -1,0 +1,62 @@
+public class MainActivity extends AppCompatActivity {
+
+    EditText name, email, id;
+    Button insert, view, update, delete;
+    DBHelper db;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        name = findViewById(R.id.name);
+        email = findViewById(R.id.email);
+        id = findViewById(R.id.id);
+
+        insert = findViewById(R.id.insert);
+        view = findViewById(R.id.view);
+        update = findViewById(R.id.update);
+        delete = findViewById(R.id.delete);
+
+        db = new DBHelper(this);
+
+        insert.setOnClickListener(v -> {
+            boolean result = db.insertData(name.getText().toString(), email.getText().toString());
+            Toast.makeText(this, result ? "Inserted" : "Failed", Toast.LENGTH_SHORT).show();
+        });
+
+        view.setOnClickListener(v -> {
+            Cursor res = db.getAllData();
+            StringBuilder data = new StringBuilder();
+
+            while (res.moveToNext()) {
+                data.append("ID: ").append(res.getString(0)).append("\n");
+                data.append("Name: ").append(res.getString(1)).append("\n");
+                data.append("Email: ").append(res.getString(2)).append("\n\n");
+            }
+
+            showMessage("Data", data.toString());
+        });
+
+        update.setOnClickListener(v -> {
+            boolean result = db.updateData(id.getText().toString(),
+                    name.getText().toString(),
+                    email.getText().toString());
+
+            Toast.makeText(this, result ? "Updated" : "Failed", Toast.LENGTH_SHORT).show();
+        });
+
+        delete.setOnClickListener(v -> {
+            boolean result = db.deleteData(id.getText().toString());
+            Toast.makeText(this, result ? "Deleted" : "Failed", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    public void showMessage(String title, String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.show();
+    }
+}
