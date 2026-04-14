@@ -1,0 +1,4 @@
+python -m pip install -python library install eg.sklearn,opencv
+harcascade = curl -o haarcascade_frontalface_default.xml https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml
+mouth = https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_mcs_mouth.xml
+image and video should be in your folder
